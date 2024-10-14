@@ -1,8 +1,13 @@
-import React, { useEffect } from "react";
-import { Table } from "antd";
+import React from "react";
+import { Button, Statistic, Table } from "antd";
 import type { TableProps } from "antd";
 import { TransactionDetail } from "../types/index";
-import useTransactions from "../hooks/useTransacctionStore";
+
+interface Props {
+  datasource: TransactionDetail[]; // Propiedad para agregar transacciones
+  isloading: boolean; // Propiedad para agregar transacciones
+  onStatusChangeOrder: (tx: TransactionDetail) => void;
+}
 
 const columns: TableProps<TransactionDetail>["columns"] = [
   {
@@ -20,11 +25,19 @@ const columns: TableProps<TransactionDetail>["columns"] = [
     className: "column-money",
     dataIndex: ["subscription", "amount"], // Accede al monto dentro de la suscripción
     align: "right",
+    render(value, record, index) {
+      return (
+        <Statistic title="Monto invertido (COP)" value={value} precision={2} />
+      );
+    },
   },
   {
-    title: "Performance",
+    title: "Rendimiento",
     dataIndex: "performance", // El performance viene directo de la transacción
     align: "right",
+    render(value, record, index) {
+      return <Statistic title="Ganancias (COP)" value={value} precision={2} />;
+    },
   },
   {
     title: "Fecha",
@@ -33,27 +46,39 @@ const columns: TableProps<TransactionDetail>["columns"] = [
   },
   {
     title: "Estado",
-    dataIndex: "status", // Muestra el estado de la transacción
+    dataIndex: "status",
+    // Fo // Muestra el estado de la transacción
   },
 ];
 
-const TrasactionList: React.FC = () => {
-  const { transactions, fetchTrasactions, isLoading, error } =
-    useTransactions();
-
-  useEffect(() => {
-    fetchTrasactions();
-  }, [fetchTrasactions]);
-
+const TransactionList: React.FC<Props> = ({
+  datasource,
+  isloading,
+  onStatusChangeOrder,
+}) => {
+  columns[columns.length - 1].render = (status, value) => (
+    <Button
+      onClick={() => {
+        onStatusChangeOrder(value);
+      }}
+      style={{ marginTop: 16 }}
+      type={status === "Opened" ? "default" : "primary"}
+    >
+      Cerrar Orden
+    </Button>
+  );
   return (
     <Table<TransactionDetail>
-      loading={isLoading}
+      loading={isloading}
       columns={columns}
-      dataSource={transactions} // Asume que las transacciones ya están en el formato correcto
+      dataSource={datasource || []} // Asume que las transacciones ya están en el formato correcto
       rowKey={(record) => record._id} // Asegura que cada fila tenga una clave única
       bordered
+      pagination={{
+        pageSize: 4,
+      }}
     />
   );
 };
 
-export default TrasactionList;
+export default TransactionList;

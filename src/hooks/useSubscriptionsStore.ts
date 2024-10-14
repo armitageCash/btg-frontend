@@ -10,9 +10,9 @@ export interface Subscription {
   user?: string;
   fund: string;
   amount: number;
-  createdAt: Date;
-  updatedAt: Date;
-  status: "Opened" | "Closed";
+  createdAt?: Date;
+  updatedAt?: Date;
+  status?: "Opened" | "Closed";
 }
 
 export interface SubscriptionDetailed {
@@ -27,7 +27,7 @@ export interface SubscriptionDetailed {
 
 export interface FundsState {
   subscriptions: Subscription[];
-  fetchFunds: () => Promise<void>;
+  fetchSubscriptions: () => Promise<void>;
   isLoading: boolean;
   error: string | null;
 }
@@ -37,14 +37,17 @@ const useSubscriptionStore = create<FundsState>((set: any) => ({
   isLoading: false,
   error: null,
 
-  fetchFunds: async () => {
+  fetchSubscriptions: async () => {
     set({ isLoading: true, error: null });
     try {
       const response = await axios.get("/api/funds");
       set({ funds: response.data });
     } catch (error) {
       set({
-        error: error instanceof Error ? error.message : "Error fetching funds",
+        error:
+          error instanceof Error
+            ? error.message
+            : "Error fetching subscriptions",
       });
     } finally {
       set({ isLoading: false });

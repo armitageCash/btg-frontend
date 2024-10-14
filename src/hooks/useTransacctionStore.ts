@@ -1,32 +1,29 @@
 import { create } from "zustand";
 import axios from "axios";
-import { API_URL } from "../constants";
-import { TransactionDetail } from "../types";
-
-export type Category = "FPV" | "FIC";
-
-export interface Transaction {
-  _id: string; // Identificador único de la transacción (UUID)
-  subscription: string; // ID de la suscripción relacionada (referencia)
-  performance: number; // Rendimiento de la transacción
-  date: Date; // Fecha de la transacción
-  status: "Completed" | "Pending"; // Estado de la transacción
-  type: "IN" | "OUT"; // Tipo de transacción (entrada o salida)
-}
+import { API_URL } from "../constants"; // Asegúrate de que esta constante esté bien definida
+import { TransactionDetail } from "../types"; // Asegúrate de que este tipo esté bien definido
 
 interface transactionState {
   transactions: TransactionDetail[];
-  fetchTrasactions: () => Promise<void>;
+  fetchTransactions: () => Promise<void>;
+  setTransactions: (newTransactions: TransactionDetail[]) => void;
+  addTx: (tx: TransactionDetail) => void;
   isLoading: boolean;
   error: string | null;
 }
 
-const useTransactions = create<transactionState>((set: any) => ({
+const useTransactions = create<transactionState>((set) => ({
   transactions: [],
   isLoading: false,
   error: null,
 
-  fetchTrasactions: async () => {
+  // Función para establecer un nuevo conjunto de transacciones
+  setTransactions: (newTransactions: TransactionDetail[]) => {
+    set({ transactions: newTransactions });
+  },
+
+  // Función para obtener las transacciones desde el servidor
+  fetchTransactions: async () => {
     set({ isLoading: true, error: null });
     try {
       const response = await axios.get(
@@ -36,11 +33,20 @@ const useTransactions = create<transactionState>((set: any) => ({
     } catch (error) {
       set({
         error:
-          error instanceof Error ? error.message : "Error fetching Transaction",
+          error instanceof Error
+            ? error.message
+            : "Error fetching transactions",
       });
     } finally {
       set({ isLoading: false });
     }
+  },
+
+  // Función para agregar una nueva transacción al estado existente
+  addTx: (tx: TransactionDetail) => {
+    set((state) => ({
+      transactions: [...state.transactions, tx], // Añadir la nueva transacción
+    }));
   },
 }));
 

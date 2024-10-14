@@ -8,23 +8,29 @@ import {
   Modal,
   Row,
   Statistic,
-  Input,
   theme,
 } from "antd";
 import useFundsStore, { Fund } from "./hooks/useFundStore";
-import TrasactionList from "./components/transactionList";
 import FundsList from "./components/fundList";
 import useUserStore from "./hooks/useUserStore";
 import useStore from "./hooks";
 import { Subscription } from "./hooks/useSubscriptionsStore";
 import { notification } from "antd";
+import useTransactions from "./hooks/useTransacctionStore";
+import TransactionList from "./components/transactionList";
 
 type NotificationType = "success" | "info" | "warning" | "error";
 
 const { Header, Content, Footer } = Layout;
 
 const App: React.FC = () => {
-  const { funds, fetchFunds, isLoading, error } = useFundsStore();
+  const { fetchFunds } = useFundsStore();
+  const {
+    transactions,
+    fetchTransactions,
+    isLoading: loadingTxs,
+  } = useTransactions();
+
   const { subscribe } = useStore();
   const {
     user,
@@ -44,9 +50,8 @@ const App: React.FC = () => {
 
   const [open, setOpen] = React.useState<boolean>(false);
   const [selectedFund, setSelectedFund] = React.useState<string | null>(null);
-  const [amount, setAmount] = React.useState<number>(1000); // Estado para el monto
 
-  const handleConfirmTransaction = (fund: Fund, values: any) => {
+  const handleConfirmTransaction = async (fund: Fund, values: any) => {
     if (!selectedFund) {
       return;
     }
@@ -56,17 +61,19 @@ const App: React.FC = () => {
       user: user?._id,
       amount: values[fund.name],
       status: "Opened",
-      createdAt: new Date(),
-      updatedAt: new Date(),
     };
 
-    subscribe(newSubscription);
-    openNotificationWithIcon("success");
+    const tx = await subscribe(newSubscription);
+    if (tx) {
+      openNotificationWithIcon("success");
+      fetchTransactions();
+    }
   };
 
   useEffect(() => {
     fetchFunds();
     fetchUser();
+    fetchTransactions();
   }, [fetchFunds, fetchUser]);
 
   const {
@@ -74,7 +81,7 @@ const App: React.FC = () => {
   } = theme.useToken();
 
   return (
-    <Layout style={{ height: "100vh" }}>
+    <Layout>
       {contextHolder}
       <Header style={{ display: "flex", alignItems: "center" }}>
         <div className="demo-logo" />
@@ -112,7 +119,19 @@ const App: React.FC = () => {
         >
           <Row>
             <Col span={12}>
-              <TrasactionList />
+              <TransactionList
+                onStatusChangeOrder={(tx) => {
+                  Modal.confirm({
+                    title: "Confirmar movimiento",
+                    content: `¿Está seguro de que desea realizar este movimiento? de ${
+                      tx.status == "Opened" ? "Cancelación" : ""
+                    }`,
+                    onOk: () => {},
+                  });
+                }}
+                datasource={transactions}
+                isloading={loadingTxs}
+              />
             </Col>
             <Col span={12}>
               <h1 style={{ textAlign: "center" }}>Balance</h1>
@@ -123,7 +142,7 @@ const App: React.FC = () => {
                 <Row gutter={16}>
                   <Col span={24}>
                     <Statistic
-                      title="Account Balance (USD)"
+                      title="Account Balance (COP)"
                       value={112893}
                       precision={2}
                     />
