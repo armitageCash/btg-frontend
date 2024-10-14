@@ -17,6 +17,9 @@ import FundsList from "./components/fundList";
 import useUserStore from "./hooks/useUserStore";
 import useStore from "./hooks";
 import { Subscription } from "./hooks/useSubscriptionsStore";
+import { notification } from "antd";
+
+type NotificationType = "success" | "info" | "warning" | "error";
 
 const { Header, Content, Footer } = Layout;
 
@@ -30,6 +33,15 @@ const App: React.FC = () => {
     error: errorUser,
   } = useUserStore();
 
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotificationWithIcon = (type: NotificationType) => {
+    api[type]({
+      message: "Nueva Orden",
+      description: "Orden de inversión realizada correctamente",
+    });
+  };
+
   const [open, setOpen] = React.useState<boolean>(false);
   const [selectedFund, setSelectedFund] = React.useState<string | null>(null);
   const [amount, setAmount] = React.useState<number>(1000); // Estado para el monto
@@ -39,20 +51,17 @@ const App: React.FC = () => {
       return;
     }
 
-    console.log("fund", fund);
-    console.log("values", values);
-
     const newSubscription: Subscription = {
-      fund: fund._id, // Utilizar el fondo seleccionado
+      fund: fund._id,
       user: user?._id,
-      amount: amount, // Usar el monto ingresado por el usuario
+      amount: values[fund.name],
       status: "Opened",
       createdAt: new Date(),
       updatedAt: new Date(),
     };
 
-    subscribe(newSubscription); // Agregar la suscripción
-    setOpen(false); // Cerrar el modal después de la suscripción
+    subscribe(newSubscription);
+    openNotificationWithIcon("success");
   };
 
   useEffect(() => {
@@ -66,6 +75,7 @@ const App: React.FC = () => {
 
   return (
     <Layout style={{ height: "100vh" }}>
+      {contextHolder}
       <Header style={{ display: "flex", alignItems: "center" }}>
         <div className="demo-logo" />
         <Menu
