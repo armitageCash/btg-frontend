@@ -1,46 +1,111 @@
-# Getting Started with Create React App
+# BTG Front
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Este es el proyecto frontend para BTG, construido con React y TypeScript.
 
-## Available Scripts
+## Requisitos previos
 
-In the project directory, you can run:
+- Node.js (versión recomendada: 14.x o superior)
+- npm (normalmente viene con Node.js) o yarn
 
-### `npm start`
+## Instalación
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+1. Clone el repositorio:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+   ```bash
+   git clone https://github.com/armitageCash/btg-frontend.git
+   cd btg-frontend
+   ```
 
-### `npm test`
+2. Instale las dependencias:
+   ```bash
+   npm install
+   ```
+   o si usa yarn:
+   ```bash
+   yarn install
+   ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Desarrollo
 
-### `npm run build`
+Para iniciar el servidor de desarrollo:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm start
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+o
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+yarn start
+```
 
-### `npm run eject`
+Esto iniciará la aplicación en modo de desarrollo. Abra [http://localhost:3000](http://localhost:3000) para verla en el navegador.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Construcción del proyecto
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Para crear una versión de producción optimizada:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```bash
+npm run build
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+o
 
-## Learn More
+```bash
+yarn build
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Esto generará una carpeta `build` con los archivos estáticos listos para ser desplegados.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Pruebas
+
+Para ejecutar las pruebas:
+
+```bash
+npm test
+```
+
+o
+
+```bash
+yarn test
+```
+
+## Pipeline de Despliegue
+
+Cuando se realiza un pull request a la rama `main`, se activa automáticamente el pipeline de despliegue. Este proceso incluye los siguientes pasos:
+
+1. Ejecución de pruebas
+2. Construcción del proyecto
+3. Despliegue de los archivos estáticos a un bucket S3 de AWS
+
+Nota: Asegúrese de que las credenciales de AWS estén correctamente configuradas en el entorno de CI/CD para permitir el despliegue al bucket S3.
+
+## Tecnologías principales
+
+- React
+- TypeScript
+- Ant Design
+- Axios
+- Zustand (para manejo de estado)
+
+## Scripts disponibles
+
+- `npm start` o `yarn start`: Inicia el servidor de desarrollo
+- `npm build` o `yarn build`: Crea una versión de producción
+- `npm test` o `yarn test`: Ejecuta las pruebas
+- `npm run eject` o `yarn eject`: Expone las configuraciones de Create React App (use con precaución)
+
+## Configuración de ESLint
+
+Este proyecto utiliza la configuración de ESLint extendida de Create React App.
+
+## Compatibilidad de navegadores
+
+La configuración de producción está orientada a navegadores con más del 0.2% de cuota de mercado global, excluyendo versiones antiguas y Opera Mini.
+
+Para desarrollo, se apunta a las últimas versiones de Chrome, Firefox y Safari.
+
+## Contribuciones
+
+Las contribuciones son bienvenidas. Por favor, asegúrese de que las pruebas pasen antes de enviar un pull request.
