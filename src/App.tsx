@@ -3,11 +3,11 @@ import {
   Breadcrumb,
   Button,
   Col,
-  Layout,
   Menu,
   Modal,
   Row,
   Statistic,
+  Layout,
   theme,
 } from "antd";
 import useFundsStore, { Fund } from "./hooks/useFundStore";
@@ -18,6 +18,27 @@ import { Subscription } from "./hooks/useSubscriptionsStore";
 import { notification } from "antd";
 import useTransactions from "./hooks/useTransacctionStore";
 import TransactionList from "./components/transactionList";
+import { Avatar, Dropdown, Space } from "antd";
+import {
+  UserOutlined,
+  LogoutOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
+
+const UserMenu = (
+  <Menu>
+    <Menu.Item key="profile" icon={<UserOutlined />}>
+      Perfil
+    </Menu.Item>
+    <Menu.Item key="settings" icon={<SettingOutlined />}>
+      Configuración
+    </Menu.Item>
+    <Menu.Divider />
+    <Menu.Item key="logout" icon={<LogoutOutlined />}>
+      Cerrar sesión
+    </Menu.Item>
+  </Menu>
+);
 
 type NotificationType = "success" | "info" | "warning" | "error";
 
@@ -85,6 +106,7 @@ const App: React.FC = () => {
       {contextHolder}
       <Header style={{ display: "flex", alignItems: "center" }}>
         <div className="demo-logo" />
+
         <Menu
           theme="dark"
           mode="horizontal"
@@ -101,6 +123,15 @@ const App: React.FC = () => {
           ]}
           style={{ flex: 1, minWidth: 0 }}
         />
+        <Dropdown overlay={UserMenu} trigger={["click"]}>
+          <Space>
+            <Avatar
+              style={{ backgroundColor: "#87d068" }}
+              icon={<UserOutlined />}
+            />
+            <span style={{ color: "white" }}>{user?.firstName}</span>
+          </Space>
+        </Dropdown>
       </Header>
       <Content style={{ padding: "0 48px" }}>
         <Breadcrumb style={{ margin: "16px 0" }}>
