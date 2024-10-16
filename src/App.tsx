@@ -58,12 +58,7 @@ const App: React.FC = () => {
   } = useTransactions();
 
   const { subscribe } = useStore();
-  const {
-    user,
-    fetchUser,
-    isLoading: userLoader,
-    error: errorUser,
-  } = useUserStore();
+  const { user, fetchUser, isLoading: userLoader } = useUserStore();
 
   const [api, contextHolder] = notification.useNotification();
 
@@ -108,7 +103,7 @@ const App: React.FC = () => {
     fetchFunds();
     fetchUser();
     fetchTransactions();
-  }, [fetchFunds, fetchUser]);
+  }, [fetchFunds, fetchTransactions, fetchUser]);
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -164,7 +159,7 @@ const App: React.FC = () => {
                   Modal.confirm({
                     title: "Confirmar movimiento",
                     content: `¿Está seguro de que desea realizar este movimiento? de ${
-                      tx.status == "Opened" ? "Cancelación" : ""
+                      tx.status === "Opened" ? "Cancelación" : ""
                     }`,
                     onOk: async () => {
                       await updateSubscriptions(tx.subscription);

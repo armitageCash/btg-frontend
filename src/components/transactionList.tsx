@@ -13,11 +13,13 @@ const columns: TableProps<TransactionDetail>["columns"] = [
   {
     title: "Nombres",
     dataIndex: ["subscription", "user", "firstName"], // Navega dentro del objeto para obtener el primer nombre
+    // eslint-disable-next-line jsx-a11y/anchor-is-valid
     render: (text) => <a>{text}</a>,
   },
   {
     title: "Apellidos",
     dataIndex: ["subscription", "user", "lastName"], // Navega dentro del objeto para obtener el apellido
+    // eslint-disable-next-line jsx-a11y/anchor-is-valid
     render: (text) => <a>{text}</a>,
   },
   {
