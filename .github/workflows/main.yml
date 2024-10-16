@@ -3,7 +3,7 @@ name: Deploy React App to S3
 on:
   push:
     branches:
-      - main  # Cambia la rama si es necesario
+      - main  # Cambia esto si tu rama principal tiene otro nombre
 
 jobs:
   build:
@@ -16,22 +16,19 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18'  # Especifica la versión de Node.js que deseas usar
+        node-version: '18.20.4'  # Asegúrate de usar la versión que mencionaste
 
     - name: Install dependencies
       run: npm install
 
     - name: Build the React app
-      run: npm run build  # Este comando crea los archivos de build en el directorio 'build'
+      run: npm run build  # Esto debe crear el directorio 'build'
+
+    - name: List files after build
+      run: ls -la  # Muestra todos los archivos y directorios en el contexto
 
     - name: Verify build directory exists
       run: ls -la build  # Verifica que el directorio build se haya creado correctamente
-
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: build-files
-        path: build  # Directorio donde se guardan los archivos compilados
 
   deploy:
     needs: build  # Este job se ejecuta solo si el build fue exitoso
@@ -46,6 +43,9 @@ jobs:
       with:
         name: build-files
 
+    - name: List files after downloading artifacts
+      run: ls -la  # Muestra todos los archivos y directorios en el contexto
+
     - name: Verify build directory exists
       run: ls -la build  # Verifica que el directorio se haya descargado correctamente
 
@@ -58,4 +58,4 @@ jobs:
 
     - name: Sync files to S3
       run: aws s3 sync ./build s3://${{ secrets.AWS_S3_BUCKET }} --delete
-      # El flag --delete asegura que los archivos obsoletos se eliminen del bucket
+    
