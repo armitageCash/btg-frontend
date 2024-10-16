@@ -8,8 +8,8 @@ interface StoreState {
   txs: TransactionDetail[];
   tx?: TransactionDetail | null;
   funds: Subscription[];
-  setTxs: (transactions: TransactionDetail[]) => void; // Agregar setTxs a la interfaz
-  subscribe: (subscription: Subscription) => Promise<TransactionDetail | null>; // Asegurar que devuelva null en caso de error
+  setTxs: (transactions: TransactionDetail[]) => void;
+  subscribe: (subscription: Subscription) => Promise<TransactionDetail | null>;
   cancel: (subscriptionId: string) => void;
   clearFunds: () => void;
   clearTxs: () => void;
@@ -37,8 +37,6 @@ const useStore = create<StoreState>((set) => ({
       );
 
       const newTx: TransactionDetail = response.data.data;
-      console.log("new tx response", newTx);
-
       set((state) => ({
         txs: [...state.txs, newTx], // Agregar la nueva transacción a la lista
       }));
