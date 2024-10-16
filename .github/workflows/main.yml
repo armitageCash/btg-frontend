@@ -21,11 +21,11 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Build Angular app
+    - name: Build react app
       run: npm run build
 
     - name: Archive dist
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3  # <-- Cambia a v3
       with:
         name: dist
         path: dist
