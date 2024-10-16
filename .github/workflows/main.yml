@@ -1,4 +1,4 @@
-name: BTG-frontend Build and Deploy
+name: React Build and Deploy
 
 on:
   push:
@@ -11,24 +11,24 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '14'
+        node-version: '18'
 
     - name: Install dependencies
       run: npm install
 
-    - name: Build react app
+    - name: Build React app
       run: npm run build
 
-    - name: Archive dist
-      uses: actions/upload-artifact@v3  # <-- Cambia a v3
+    - name: Archive build
+      uses: actions/upload-artifact@v3
       with:
-        name: dist
-        path: dist
+        name: build
+        path: build
 
   deploy:
     runs-on: ubuntu-latest
@@ -37,7 +37,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -47,11 +47,11 @@ jobs:
         aws-region: ${{ secrets.AWS_REGION }}
 
     - name: Download artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
-        name: dist
-        path: dist
+        name: build
+        path: build
 
     - name: Deploy to S3
       run: |
-        aws s3 sync dist/dos/ s3://btg-public-html --delete
+        aws s3 sync build/ s3://btg-public-html --delete
