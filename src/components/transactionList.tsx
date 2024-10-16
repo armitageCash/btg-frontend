@@ -62,9 +62,9 @@ const TransactionList: React.FC<Props> = ({
         onStatusChangeOrder(value);
       }}
       style={{ marginTop: 16 }}
-      type={status === "Opened" ? "default" : "primary"}
+      type={status === "Opened" ? "primary" : "default"}
     >
-      Cerrar Orden
+      {status === "Opened" ? "Orden Abierta" : "Orden Cerrada"}
     </Button>
   );
   return (

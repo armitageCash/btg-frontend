@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
-import { API_URL } from "../constants";
+import { apiUrl } from "../constants";
 export type Category = "FPV" | "FIC";
 
 export interface Fund {
@@ -26,7 +26,7 @@ const useFundsStore = create<FundsState>((set: any) => ({
   fetchFunds: async () => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.get(`${API_URL}api/funds`);
+      const response = await axios.get(`${apiUrl}api/funds`);
       setTimeout(() => {
         set({ funds: response.data.data });
       }, 5000);

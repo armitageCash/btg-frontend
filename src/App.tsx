@@ -9,12 +9,15 @@ import {
   Statistic,
   Layout,
   theme,
+  Skeleton,
 } from "antd";
 import useFundsStore, { Fund } from "./hooks/useFundStore";
 import FundsList from "./components/fundList";
 import useUserStore from "./hooks/useUserStore";
 import useStore from "./hooks";
-import { Subscription } from "./hooks/useSubscriptionsStore";
+import useSubscriptionStore, {
+  Subscription,
+} from "./hooks/useSubscriptionsStore";
 import { notification } from "antd";
 import useTransactions from "./hooks/useTransacctionStore";
 import TransactionList from "./components/transactionList";
@@ -46,6 +49,8 @@ const { Header, Content, Footer } = Layout;
 
 const App: React.FC = () => {
   const { fetchFunds } = useFundsStore();
+  const { updateSubscriptions } = useSubscriptionStore();
+
   const {
     transactions,
     fetchTransactions,
@@ -62,7 +67,11 @@ const App: React.FC = () => {
 
   const [api, contextHolder] = notification.useNotification();
 
-  const openNotificationWithIcon = (type: NotificationType) => {
+  const openNotificationWithIcon = (
+    type: NotificationType,
+    title: string,
+    message: String
+  ) => {
     api[type]({
       message: "Nueva Orden",
       description: "Orden de inversión realizada correctamente",
@@ -86,7 +95,11 @@ const App: React.FC = () => {
 
     const tx = await subscribe(newSubscription);
     if (tx) {
-      openNotificationWithIcon("success");
+      openNotificationWithIcon(
+        "success",
+        "Nueva Orden",
+        "Orden de inversión realizada correctamente"
+      );
       fetchTransactions();
     }
   };
@@ -112,10 +125,6 @@ const App: React.FC = () => {
           mode="horizontal"
           defaultSelectedKeys={["2"]}
           items={[
-            {
-              key: 1,
-              label: `Subscripciones`,
-            },
             {
               key: 2,
               label: `Trasacciones`,
@@ -157,7 +166,16 @@ const App: React.FC = () => {
                     content: `¿Está seguro de que desea realizar este movimiento? de ${
                       tx.status == "Opened" ? "Cancelación" : ""
                     }`,
-                    onOk: () => {},
+                    onOk: async () => {
+                      await updateSubscriptions(tx.subscription);
+                      openNotificationWithIcon(
+                        "success",
+                        "Orden de cancelación",
+                        "Orden cancelada correctamente"
+                      );
+                      fetchTransactions();
+                      fetchUser();
+                    },
                   });
                 }}
                 datasource={transactions}
@@ -172,18 +190,25 @@ const App: React.FC = () => {
               >
                 <Row gutter={16}>
                   <Col span={24}>
-                    <Statistic
-                      title="Account Balance (COP)"
-                      value={112893}
-                      precision={2}
-                    />
-                    <Button
-                      onClick={() => setOpen(!open)}
-                      style={{ marginTop: 16 }}
-                      type="primary"
-                    >
-                      Nueva Apertura
-                    </Button>
+                    {userLoader ? (
+                      <Skeleton />
+                    ) : (
+                      <>
+                        {" "}
+                        <Statistic
+                          title="Account Balance (COP)"
+                          value={user?.wallet.balance}
+                          precision={2}
+                        />
+                        <Button
+                          onClick={() => setOpen(!open)}
+                          style={{ marginTop: 16 }}
+                          type="primary"
+                        >
+                          Nueva Apertura
+                        </Button>
+                      </>
+                    )}
                   </Col>
                 </Row>
               </div>

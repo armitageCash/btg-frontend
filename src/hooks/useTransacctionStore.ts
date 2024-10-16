@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
-import { API_URL } from "../constants"; // Asegúrate de que esta constante esté bien definida
+import { apiUrl } from "../constants"; // Asegúrate de que esta constante esté bien definida
 import { TransactionDetail } from "../types"; // Asegúrate de que este tipo esté bien definido
 
 interface transactionState {
@@ -24,10 +24,11 @@ const useTransactions = create<transactionState>((set) => ({
 
   // Función para obtener las transacciones desde el servidor
   fetchTransactions: async () => {
+    console.log(process.env);
     set({ isLoading: true, error: null });
     try {
       const response = await axios.get(
-        `${API_URL}api/txs/${"a3bb189e-8bf9-3888-9912-ace4e6543002"}`
+        `${apiUrl}api/txs/${"a3bb189e-8bf9-3888-9912-ace4e6543002"}`
       );
       set({ transactions: response.data.data });
     } catch (error) {

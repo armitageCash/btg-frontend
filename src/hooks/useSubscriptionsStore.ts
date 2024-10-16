@@ -2,6 +2,7 @@ import { create } from "zustand";
 import axios from "axios";
 import { User } from "./useUserStore";
 import { Fund } from "./useFundStore";
+import { apiUrl } from "../constants";
 
 export type Category = "FPV" | "FIC";
 
@@ -27,7 +28,7 @@ export interface SubscriptionDetailed {
 
 export interface FundsState {
   subscriptions: Subscription[];
-  fetchSubscriptions: () => Promise<void>;
+  updateSubscriptions: (Subscription: SubscriptionDetailed) => Promise<void>;
   isLoading: boolean;
   error: string | null;
 }
@@ -37,10 +38,13 @@ const useSubscriptionStore = create<FundsState>((set: any) => ({
   isLoading: false,
   error: null,
 
-  fetchSubscriptions: async () => {
+  updateSubscriptions: async (subscription: SubscriptionDetailed) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.get("/api/funds");
+      const response = await axios.put(
+        `${apiUrl}api/subscription`,
+        subscription
+      );
       set({ funds: response.data });
     } catch (error) {
       set({

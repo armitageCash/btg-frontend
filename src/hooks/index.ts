@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { Subscription } from "./useSubscriptionsStore";
 import { TransactionDetail } from "../types";
 import axios from "axios"; // Importar Axios
-import { API_URL } from "../constants";
+import { apiUrl } from "../constants";
 
 interface StoreState {
   txs: TransactionDetail[];
@@ -27,7 +27,7 @@ const useStore = create<StoreState>((set) => ({
   ): Promise<TransactionDetail | null> => {
     try {
       const response = await axios.post(
-        `${API_URL}api/subscription`,
+        `${apiUrl}api/subscription`,
         subscription,
         {
           headers: {

@@ -1,6 +1,11 @@
 import { create } from "zustand";
 import axios from "axios";
-import { API_URL } from "../constants";
+import { apiUrl } from "../constants";
+
+export type Wallet = {
+  _id: String;
+  balance: number;
+};
 
 export interface User {
   _id: string; // Identificador único del usuario (puede ser un UUID)
@@ -10,7 +15,8 @@ export interface User {
   email: string; // Correo electrónico
   password: string; // Contraseña (en producción, deberías manejar esto con seguridad)
   createdAt: Date; // Fecha de creación de la cuenta
-  updatedAt: Date; // Fecha de la última actualización
+  updatedAt: Date;
+  wallet: Wallet; // Fecha de la última actualización
 }
 
 interface UsersState {
@@ -30,7 +36,7 @@ const useUserStore = create<UsersState>((set) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await axios.get(
-        `${API_URL}api/me/${"a3bb189e-8bf9-3888-9912-ace4e6543002"}`
+        `${apiUrl}api/me/${"a3bb189e-8bf9-3888-9912-ace4e6543002"}`
       );
       set({ user: response.data.data }); // Guarda el usuario obtenido
     } catch (error) {
