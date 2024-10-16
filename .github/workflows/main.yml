@@ -24,6 +24,9 @@ jobs:
     - name: Build the React app
       run: npm run build  # Este comando crea los archivos de build en el directorio 'build'
 
+    - name: Verify build directory exists
+      run: ls -la build  # Verifica que el directorio build se haya creado correctamente
+
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -35,10 +38,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
     - name: Download build artifacts
       uses: actions/download-artifact@v3
       with:
         name: build-files
+
+    - name: Verify build directory exists
+      run: ls -la build  # Verifica que el directorio se haya descargado correctamente
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v3
