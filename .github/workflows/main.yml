@@ -21,7 +21,7 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Build Angular app
+    - name: Build react app
       run: npm run build
 
     - name: Archive dist
