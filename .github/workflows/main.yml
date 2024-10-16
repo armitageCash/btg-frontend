@@ -3,7 +3,7 @@ name: Deploy React App to S3
 on:
   push:
     branches:
-      - main  # Se ejecuta cuando hay un push a la rama main (puedes cambiarla)
+      - main  # Cambia la rama si es necesario
 
 jobs:
   build:
@@ -16,22 +16,22 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18'  # Versión de Node.js que deseas usar (puedes cambiarla)
+        node-version: '18'  # Especifica la versión de Node.js que deseas usar
 
     - name: Install dependencies
       run: npm install
 
     - name: Build the React app
-      run: npm run build  # Este comando genera los archivos para producción (build)
+      run: npm run build  # Este comando crea los archivos de build en el directorio 'build'
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
         name: build-files
-        path: build  # Directorio donde se generan los archivos (usualmente 'build' en React)
+        path: build  # Directorio donde se guardan los archivos compilados
 
   deploy:
-    needs: build  # El job 'deploy' depende de que 'build' haya sido exitoso
+    needs: build  # Este job se ejecuta solo si el build fue exitoso
     runs-on: ubuntu-latest
 
     steps:
@@ -40,16 +40,13 @@ jobs:
       with:
         name: build-files
 
-    - name: Upload to S3
-      uses: aws-actions/s3-sync-action@v2
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v3
       with:
-        bucket: ${{ secrets.AWS_S3_BUCKET }}  # Nombre del bucket S3 (configurado en secrets)
-        region: ${{ secrets.AWS_REGION }}     # Región de tu bucket S3
-        source-dir: build                     # Directorio con los archivos que se subirán
-        delete: true                          # Elimina archivos en el bucket que no están en el build actual
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: Invalidate CloudFront cache (opcional)
-      uses: chetan/invalidate-cloudfront-action@v1
-      with:
-        distribution-id: ${{ secrets.AWS_CLOUDFRONT_ID }}  # Distribución de CloudFront (opcional)
-        paths: '/*'
+    - name: Sync files to S3
+      run: aws s3 sync ./build s3://${{ secrets.AWS_S3_BUCKET }} --delete
+      # El flag --delete asegura que los archivos obsoletos se eliminen del bucket
