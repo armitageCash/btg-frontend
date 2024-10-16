@@ -21,7 +21,7 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Build Angular app
+    - name: Build React app
       run: npm run build
 
     - name: Archive build
@@ -54,4 +54,4 @@ jobs:
 
     - name: Deploy to S3
       run: |
-        aws s3 sync dist/dos/ s3://btg-public-html --delete
+        aws s3 sync build/ s3://btg-public-html --delete
