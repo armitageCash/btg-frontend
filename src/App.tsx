@@ -153,7 +153,7 @@ const App: React.FC = () => {
           }}
         >
           <Row>
-            <Col span={12}>
+            <Col span={18}>
               <TransactionList
                 onStatusChangeOrder={(tx) => {
                   Modal.confirm({
@@ -177,35 +177,37 @@ const App: React.FC = () => {
                 isloading={loadingTxs}
               />
             </Col>
-            <Col span={12}>
-              <h1 style={{ textAlign: "center" }}>Balance</h1>
-              <div
-                className="new-btn"
-                style={{ width: "100%", textAlign: "center" }}
-              >
-                <Row gutter={16}>
-                  <Col span={24}>
-                    {userLoader ? (
-                      <Skeleton />
-                    ) : (
-                      <>
-                        {" "}
-                        <Statistic
-                          title="Account Balance (COP)"
-                          value={user?.wallet.balance}
-                          precision={2}
-                        />
-                        <Button
-                          onClick={() => setOpen(!open)}
-                          style={{ marginTop: 16 }}
-                          type="primary"
-                        >
-                          Nueva Apertura
-                        </Button>
-                      </>
-                    )}
-                  </Col>
-                </Row>
+            <Col span={6}>
+              <div style={{ padding: 20 }}>
+                <h1 style={{ textAlign: "center" }}>Balance</h1>
+                <div
+                  className="new-btn"
+                  style={{ width: "100%", textAlign: "center" }}
+                >
+                  <Row gutter={16}>
+                    <Col span={24}>
+                      {userLoader ? (
+                        <Skeleton />
+                      ) : (
+                        <>
+                          {" "}
+                          <Statistic
+                            title="Account Balance (COP)"
+                            value={user?.wallet.balance}
+                            precision={2}
+                          />
+                          <Button
+                            onClick={() => setOpen(!open)}
+                            style={{ marginTop: 16 }}
+                            type="primary"
+                          >
+                            Nueva Apertura
+                          </Button>
+                        </>
+                      )}
+                    </Col>
+                  </Row>
+                </div>
               </div>
             </Col>
           </Row>

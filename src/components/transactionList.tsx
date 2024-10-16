@@ -23,13 +23,28 @@ const columns: TableProps<TransactionDetail>["columns"] = [
     render: (text) => <a>{text}</a>,
   },
   {
-    title: "Monto",
+    title: "Valor subscripción",
+    className: "column-money",
+    dataIndex: ["subscription", "fund", "minAmount"], // Accede al monto dentro de la suscripción
+    align: "right",
+    render(value, record, index) {
+      return (
+        <Statistic
+          title="Valor de subscripción (COP)"
+          value={value}
+          precision={2}
+        />
+      );
+    },
+  },
+  {
+    title: "Inversión",
     className: "column-money",
     dataIndex: ["subscription", "amount"], // Accede al monto dentro de la suscripción
     align: "right",
     render(value, record, index) {
       return (
-        <Statistic title="Monto invertido (COP)" value={value} precision={2} />
+        <Statistic title="Valor invertido (COP)" value={value} precision={2} />
       );
     },
   },

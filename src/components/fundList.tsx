@@ -46,6 +46,16 @@ const FundsList: React.FC<Props> = ({ onSelectedFund, onConfim }) => {
   };
 
   const handleConfirm = (fund: Fund) => {
+    console.log(inputValues);
+
+    if (inputValues[fund.name] < fund.minAmount) {
+      Modal.error({
+        title: "Fondos insuficientes",
+        content: `No dispones del monto minimo para efectuar esta inversión`,
+      });
+
+      return;
+    }
     Modal.confirm({
       title: "Confirmar movimiento",
       content: `¿Está seguro de que desea realizar este movimiento por $${
@@ -67,7 +77,9 @@ const FundsList: React.FC<Props> = ({ onSelectedFund, onConfim }) => {
     <div>
       <h2>Lista de Fondos</h2>
       <br />
-      <Skeleton loading={isLoading}>
+      {isLoading ? (
+        <Skeleton loading={isLoading} />
+      ) : (
         <List
           grid={{ gutter: 24, column: 3 }}
           dataSource={funds}
@@ -115,7 +127,7 @@ const FundsList: React.FC<Props> = ({ onSelectedFund, onConfim }) => {
             </List.Item>
           )}
         />
-      </Skeleton>
+      )}
     </div>
   );
 };
