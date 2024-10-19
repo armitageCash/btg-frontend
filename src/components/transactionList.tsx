@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Statistic, Table } from "antd";
 import type { TableProps } from "antd";
 import { TransactionDetail } from "../types/index";
+import moment from "moment";
 
 interface Props {
   datasource: TransactionDetail[]; // Propiedad para agregar transacciones
@@ -59,12 +60,13 @@ const columns: TableProps<TransactionDetail>["columns"] = [
   {
     title: "Fecha",
     dataIndex: "date", // Muestra la fecha de la transacción
+    sorter: (a, b) => moment(a.date).unix() - moment(b.date).unix(), // Comparar por Unix timestamp
+    defaultSortOrder: "descend", // Orden descendente por defecto (más reciente primero)
     render: (date) => new Date(date).toLocaleDateString(), // Formatea la fecha
   },
   {
     title: "Estado",
     dataIndex: "status",
-    // Fo // Muestra el estado de la transacción
   },
 ];
 

@@ -27,9 +27,7 @@ const useFundsStore = create<FundsState>((set: any) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await axios.get(`${apiUrl}api/funds`);
-      setTimeout(() => {
-        set({ funds: response.data.data });
-      }, 5000);
+      set({ funds: response.data.data });
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : "Error fetching funds",
