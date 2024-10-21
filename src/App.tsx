@@ -84,7 +84,7 @@ const App: React.FC = () => {
     const newSubscription: Subscription = {
       fund: fund._id,
       user: user?._id,
-      amount: values[fund.name],
+      amount: values[fund.name] ?? fund.minAmount,
       status: "Opened",
     };
 
