@@ -96,6 +96,7 @@ const App: React.FC = () => {
         "Orden de inversión realizada correctamente"
       );
       fetchTransactions();
+      fetchUser();
     }
   };
 
