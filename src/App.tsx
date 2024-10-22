@@ -157,6 +157,17 @@ const App: React.FC = () => {
             <Col span={18}>
               <TransactionList
                 onStatusChangeOrder={(tx) => {
+                  if (tx.subscription.status === "Closed") {
+                    return Modal.confirm({
+                      cancelButtonProps: { style: { display: "none" } },
+                      title: "Orden Cancelada!",
+                      content: `No puedes cerrar una orden previamente cerrada.`,
+                      onOk: async () => {
+                        return;
+                      },
+                    });
+                  }
+
                   Modal.confirm({
                     title: "Confirmar movimiento",
                     content: `¿Está seguro de que desea realizar este movimiento? de ${

@@ -81,9 +81,11 @@ const TransactionList: React.FC<Props> = ({
         onStatusChangeOrder(value);
       }}
       style={{ marginTop: 16 }}
-      type={status === "Opened" ? "primary" : "default"}
+      type={value.subscription.status === "Opened" ? "primary" : "default"}
     >
-      {status === "Opened" ? "Orden Abierta" : "Orden Cerrada"}
+      {value.subscription.status === "Opened"
+        ? "Orden Abierta"
+        : "Orden Cerrada"}
     </Button>
   );
   return (
