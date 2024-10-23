@@ -145,16 +145,16 @@ const App: React.FC = () => {
           <Breadcrumb.Item>Assets</Breadcrumb.Item>
         </Breadcrumb>
         <h1>Transacciones</h1>
-        <div
-          style={{
-            background: colorBgContainer,
-            minHeight: 280,
-            padding: 24,
-            borderRadius: borderRadiusLG,
-          }}
-        >
-          <Row>
-            <Col span={18}>
+        <Row gutter={8}>
+          <Col span={20}>
+            <div
+              style={{
+                background: colorBgContainer,
+                minHeight: 280,
+                padding: 24,
+                borderRadius: borderRadiusLG,
+              }}
+            >
               <TransactionList
                 onStatusChangeOrder={(tx) => {
                   if (tx.subscription.status === "Closed") {
@@ -188,8 +188,17 @@ const App: React.FC = () => {
                 datasource={transactions}
                 isloading={loadingTxs}
               />
-            </Col>
-            <Col span={6}>
+            </div>
+          </Col>
+          <Col span={4}>
+            <div
+              style={{
+                background: colorBgContainer,
+                minHeight: 280,
+                padding: 24,
+                borderRadius: borderRadiusLG,
+              }}
+            >
               <div style={{ padding: 20 }}>
                 <h1 style={{ textAlign: "center" }}>Balance</h1>
                 <div
@@ -221,9 +230,9 @@ const App: React.FC = () => {
                   </Row>
                 </div>
               </div>
-            </Col>
-          </Row>
-        </div>
+            </div>
+          </Col>
+        </Row>
       </Content>
       <Modal
         width={650}

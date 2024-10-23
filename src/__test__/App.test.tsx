@@ -1,5 +1,3 @@
-// src/__tests__/App.test.tsx
-
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import App from "../App"; // Asegúrate de la ruta correcta
@@ -16,7 +14,6 @@ jest.mock("../hooks/useTransacctionStore");
 
 describe("App Component", () => {
   beforeEach(() => {
-    // Set up any necessary mock implementations before each test
     (useFundsStore as unknown as jest.Mock).mockReturnValue({
       fetchFunds: jest.fn(),
     });
@@ -45,9 +42,6 @@ describe("App Component", () => {
   });
 
   test("displays user's first name in the user menu", () => {
-    render(<App />);
-
-    // Check if user's name is displayed
     expect(screen.getByText("Test User")).toBeInTheDocument();
   });
 
@@ -57,9 +51,6 @@ describe("App Component", () => {
     const button = screen.getByText("Nueva Apertura");
     fireEvent.click(button);
 
-    // Assert that the modal opens, for example, by checking for the presence of the FundsList component or modal content
     expect(await screen.findByText("Funds List")).toBeInTheDocument(); // Adjust based on actual content of FundsList
   });
-
-  // Additional tests...
 });

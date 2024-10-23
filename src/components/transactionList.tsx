@@ -1,9 +1,9 @@
 import React from "react";
-import { Button, Statistic, Table } from "antd";
+import { Button, Statistic, Table, Typography } from "antd";
 import type { TableProps } from "antd";
 import { TransactionDetail } from "../types/index";
 import moment from "moment";
-
+const { Text, Link } = Typography;
 interface Props {
   datasource: TransactionDetail[]; // Propiedad para agregar transacciones
   isloading: boolean; // Propiedad para agregar transacciones
@@ -22,6 +22,12 @@ const columns: TableProps<TransactionDetail>["columns"] = [
     dataIndex: ["subscription", "user", "lastName"], // Navega dentro del objeto para obtener el apellido
     // eslint-disable-next-line jsx-a11y/anchor-is-valid
     render: (text) => <a>{text}</a>,
+  },
+  {
+    title: "Fondo",
+    dataIndex: ["subscription", "fund", "name"], // Navega dentro del objeto para obtener el apellido
+    // eslint-disable-next-line jsx-a11y/anchor-is-valid
+    render: (text) => <Text mark>{text}</Text>,
   },
   {
     title: "Valor subscripción",
@@ -83,9 +89,7 @@ const TransactionList: React.FC<Props> = ({
       style={{ marginTop: 16 }}
       type={value.subscription.status === "Opened" ? "primary" : "default"}
     >
-      {value.subscription.status === "Opened"
-        ? "Orden Abierta"
-        : "Orden Cerrada"}
+      {value.subscription.status === "Opened" ? "Abierta" : "Cerrada"}
     </Button>
   );
   return (
