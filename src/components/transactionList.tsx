@@ -3,7 +3,7 @@ import { Button, Statistic, Table, Typography } from "antd";
 import type { TableProps } from "antd";
 import { TransactionDetail } from "../types/index";
 import moment from "moment";
-const { Text, Link } = Typography;
+const { Text } = Typography;
 interface Props {
   datasource: TransactionDetail[]; // Propiedad para agregar transacciones
   isloading: boolean; // Propiedad para agregar transacciones
